@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cek Status Permohonan Paspor</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #eaf4ff, #ffffff);
+      color: #1d4164;
+      overflow-x: hidden;
+    }
+
+    #loader {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      background: rgb(3, 11, 59);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeOut 1.5s ease forwards;
+      animation-delay: 2.5s;
+    }
+
+    #loader h1 {
+      color: white;
+      font-size: 1.8em;
+      margin-top: 20px;
+      animation: muncul 2s ease;
+    }
+
+    @keyframes muncul {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    .logo-loader {
+      width: 100px;
+      height: 100px;
+      animation: zoom 1.5s infinite alternate ease-in-out;
+      margin-bottom: 20px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+    }
+
+    @keyframes zoom {
+      from { transform: scale(1); }
+      to { transform: scale(1.15); }
+    }
+
+    header {
+      background-color: #02182f;
+      color: white;
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+
+    header img {
+      max-width: 80px;
+      margin-bottom: 15px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 1em;
+      color: #dceeff;
+    }
+
+    .card {
+      background: white;
+      max-width: 480px;
+      margin: 40px auto;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      opacity: 0;
+      transform: scale(0.95);
+      animation: popup 1s ease forwards;
+      animation-delay: 2.6s;
+    }
+
+    @keyframes popup {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: #004080;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    form button {
+      background-color: #0077cc;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #005fa3;
+    }
+
+    .hasil {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+    }
+
+    footer {
+      background-color: #011930;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="loader">
+  <div class="loader-content">
+    <img src="Kanim-tanjungpinang.jpg" alt="Logo imigrasi" class="logo-loader">
+    <h1 class="welcome-text">Selamat Datang ke Website<br>Form Pengecekan Paspor</h1>
+  </div>
+</div>
+
+
+  <header>
+    <img src="Kanim-tanjungpinang.jpg" alt="Logo Paspor">
+    <h1>Cek Status Permohonan</h1>
+    <p>Kantor Imigrasi Kelas 1 Tanjungpinang</p>
+  </header>
+
+  <main class="card">
+    <h2>Form Pengecekan Paspor</h2>
+    <form id="cekPasporForm">
+      <label for="nomorPaspor">Masukkan Nomor Permohonan:</label>
+      <input type="text" id="nomorPaspor" name="nomorPaspor" placeholder="Contoh: A123456789101112" required>
+      <button type="submit">Cek</button>
+    </form>
+    <div id="hasilCek" class="hasil"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Kantor Imigrasi Tanjungpinang</p>
+  </footer>
+
+  <script>
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 2500);
+    });
+
+    document.getElementById('cekPasporForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nomor = document.getElementById('nomorPaspor').value.trim();
+      const hasil = document.getElementById('hasilCek');
+      hasil.textContent = "Mengecek...";
+
+      fetch("https://script.google.com/macros/s/AKfycbwMnCzj3817V0SWq4DcwF53FTPBTjP0n3sp6QhjS5BfAFivJUVhrjO_P2PP--PMlKJs/exec?nomorPaspor=" + encodeURIComponent(nomor))
+        .then(response => response.json())
+        .then(data => {
+          hasil.innerHTML = `<p><strong>Status:</strong> ${data.status}</p>`;
+        })
+        .catch(error => {
+          hasil.innerHTML = `<p class="error">Terjadi kesalahan saat menghubungi server.</p>`;
+          console.error(error);
+        });
+    });
+  </script>
+</body>
+</html>
